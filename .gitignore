@@ -18,3 +18,6 @@
 
 # Skills installed by `npx skills add ...` (kept out of the deployed site)
 .agents/
+skills/
+skills-lock.json
+.claude/
