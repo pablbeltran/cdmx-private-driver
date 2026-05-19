@@ -7,3 +7,14 @@
 
 # Logs
 *.log
+
+# Local env vars
+.env
+.env.local
+.env*.local
+
+# Vercel
+.vercel
+
+# Skills installed by `npx skills add ...` (kept out of the deployed site)
+.agents/

@@ -43,9 +43,18 @@ window.addEventListener('scroll', () => {
 });
 
 // ========================================
-// Flatpickr Date Range Picker
+// Flatpickr Date Range Picker + Estimate
 // ========================================
+// TODO: confirm with real pricing. Used to show an estimate on the form.
+const RATE_PER_DAY_USD = 280;
+
 const daysCountEl = document.getElementById('daysCount');
+let currentDays = 0;
+let currentEstimate = 0;
+
+function formatUsd(n) {
+  return '$' + n.toLocaleString('en-US') + ' USD';
+}
 
 const datePicker = flatpickr('#dateRange', {
   mode: 'range',
@@ -57,9 +66,14 @@ const datePicker = flatpickr('#dateRange', {
       const start = selectedDates[0];
       const end = selectedDates[1];
       const diffTime = Math.abs(end - start);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      daysCountEl.textContent = diffDays + ' day' + (diffDays > 1 ? 's' : '') + ' selected';
+      currentDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+      currentEstimate = currentDays * RATE_PER_DAY_USD;
+      daysCountEl.textContent =
+        currentDays + ' day' + (currentDays > 1 ? 's' : '') +
+        ' · Est. ' + formatUsd(currentEstimate);
     } else {
+      currentDays = 0;
+      currentEstimate = 0;
       daysCountEl.textContent = '';
     }
   }
@@ -70,7 +84,7 @@ const datePicker = flatpickr('#dateRange', {
 // ========================================
 const bookingForm = document.getElementById('bookingForm');
 
-bookingForm.addEventListener('submit', (e) => {
+bookingForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const formData = {
@@ -79,24 +93,45 @@ bookingForm.addEventListener('submit', (e) => {
     lastName: document.getElementById('lastName').value,
     email: document.getElementById('email').value,
     phone: document.getElementById('phone').value,
-    notes: document.getElementById('notes').value
+    notes: document.getElementById('notes').value,
+    days: currentDays,
+    estimateUsd: currentEstimate
   };
 
-  // For now, show a confirmation message
-  // Replace this with actual form submission (API, email service, etc.)
   const btn = bookingForm.querySelector('button[type="submit"]');
   const originalText = btn.textContent;
-  btn.textContent = 'Request Sent!';
-  btn.style.background = '#22c55e';
   btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  let ok = false;
+  try {
+    const resp = await fetch('/api/book', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+    ok = resp.ok;
+  } catch (err) {
+    console.error('Booking request failed:', err);
+  }
+
+  if (ok) {
+    btn.textContent = 'Request Sent!';
+    btn.style.background = '#22c55e';
+    bookingForm.reset();
+    daysCountEl.textContent = '';
+    currentDays = 0;
+    currentEstimate = 0;
+  } else {
+    btn.textContent = 'Try again';
+    btn.style.background = '#ef4444';
+  }
 
   setTimeout(() => {
     btn.textContent = originalText;
     btn.style.background = '';
     btn.disabled = false;
-  }, 3000);
-
-  console.log('Booking request:', formData);
+  }, 3500);
 });
 
 // ========================================
