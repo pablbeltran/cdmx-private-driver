@@ -131,407 +131,244 @@ const animateOnScroll = () => {
 animateOnScroll();
 
 // ========================================
-// Map Explorer — Leaflet + OpenStreetMap
+// Map Explorer (Leaflet)
 // ========================================
-const HOME_COORDS = [19.4115, -99.1710]; // Condesa
+const EXP_HOME = [19.4115, -99.1710]; // Roma & Condesa
 
-const POI_DATA = [
-  {
-    id: 'teotihuacan',
-    name: 'Teotihuacan Pyramids',
-    coords: [19.6925, -98.8438],
-    img: 'https://images.unsplash.com/photo-1586933613001-b003c20beac0?w=200&h=200&fit=crop&q=60',
-    imgCard: 'https://images.unsplash.com/photo-1586933613001-b003c20beac0?w=400&h=300&fit=crop&q=80',
-    driveMin: 63,
-    description: 'Climb the Pyramid of the Sun and Moon at one of the most impressive ancient cities in the Americas. Arrive early to beat the crowds and walk the Avenue of the Dead in morning light.'
-  },
-  {
-    id: 'frida',
-    name: 'Frida Kahlo Museum',
-    coords: [19.3550, -99.1626],
-    img: 'images/museo frida kahlo.jpg',
-    imgCard: 'images/museo frida kahlo.jpg',
-    driveMin: 29,
-    description: 'Visit Casa Azul in Coyoacán, the iconic cobalt-blue house where Frida Kahlo was born, lived, and created her art. The museum displays personal artifacts, paintings, and the lush garden courtyard.'
-  },
-  {
-    id: 'airport',
-    name: 'Airport (AICM)',
-    coords: [19.4363, -99.0721],
-    img: 'https://images.unsplash.com/photo-1553619948-505cc1cdc320?w=200&h=200&fit=crop&q=60',
-    imgCard: 'https://images.unsplash.com/photo-1553619948-505cc1cdc320?w=400&h=300&fit=crop&q=80',
-    driveMin: 23,
-    description: 'Stress-free airport pickups and drop-offs at Mexico City International Airport. Skip the taxi lines and ride in comfort with your driver waiting at arrivals.'
-  },
-  {
-    id: 'zocalo',
-    name: 'Historic Center & Zócalo',
-    coords: [19.4326, -99.1332],
-    img: 'https://images.unsplash.com/photo-1573485905785-f8f87e7bf82c?w=200&h=200&fit=crop&q=60',
-    imgCard: 'https://images.unsplash.com/photo-1573485905785-f8f87e7bf82c?w=400&h=300&fit=crop&q=80',
-    driveMin: 17,
-    description: 'The beating heart of Mexico City. Explore the massive cathedral, Palacio Nacional with Diego Rivera murals, and Templo Mayor — the ruins of the Aztec capital hidden in plain sight.'
-  },
+// Landmarks with real lat/lng. Ordered nearest-first.
+const EXP_POIS = [
   {
     id: 'chapultepec',
     name: 'Chapultepec Castle',
     coords: [19.4205, -99.1818],
-    img: 'https://images.unsplash.com/photo-1585464231875-d9ef1f5ad396?w=200&h=200&fit=crop&q=60',
-    imgCard: 'https://images.unsplash.com/photo-1585464231875-d9ef1f5ad396?w=400&h=300&fit=crop&q=80',
     driveMin: 12,
+    img: 'images/chapultepec-castle.webp',
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Chapultepec+Castle+Mexico+City',
     description: 'The only royal castle in the Americas, perched atop Chapultepec Hill with sweeping views of the city. Inside you\'ll find stunning murals, period rooms, and the National History Museum.'
-  },
-  {
-    id: 'xochimilco',
-    name: 'Xochimilco',
-    coords: [19.2574, -99.1038],
-    img: 'images/xochimilco.jpeg',
-    imgCard: 'images/xochimilco.jpeg',
-    driveMin: 45,
-    description: 'Float through the ancient Aztec canals on colorful trajinera boats while mariachi bands play from passing vessels. A unique, vibrant experience you won\'t find anywhere else in the world.'
   },
   {
     id: 'vasconcelos',
     name: 'Biblioteca Vasconcelos',
     coords: [19.4439, -99.1530],
-    img: 'images/Biblioteca_Vasconcelos,_Ciudad_de_México,_México,_2015-07-20,_DD_13-15_HDR.jpg',
-    imgCard: 'images/Biblioteca_Vasconcelos,_Ciudad_de_México,_México,_2015-07-20,_DD_13-15_HDR.jpg',
     driveMin: 15,
+    img: 'images/Biblioteca_Vasconcelos,_Ciudad_de_México,_México,_2015-07-20,_DD_13-15_HDR.jpg',
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Biblioteca+Vasconcelos',
     description: 'One of the most stunning modern libraries in the world. Rows of bookshelves appear to float in mid-air inside this massive steel-and-glass structure — a must-see for architecture and design lovers.'
+  },
+  {
+    id: 'zocalo',
+    name: 'Historic Center & Zócalo',
+    coords: [19.4326, -99.1332],
+    driveMin: 17,
+    img: 'https://images.unsplash.com/photo-1573485905785-f8f87e7bf82c?w=400&h=300&fit=crop&q=80',
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Zocalo+Mexico+City',
+    description: 'The beating heart of Mexico City. Explore the massive cathedral, Palacio Nacional with Diego Rivera murals, and Templo Mayor — the ruins of the Aztec capital hidden in plain sight.'
+  },
+  {
+    id: 'airport',
+    name: 'Airport (AICM)',
+    coords: [19.4363, -99.0721],
+    driveMin: 23,
+    img: 'https://images.unsplash.com/photo-1553619948-505cc1cdc320?w=400&h=300&fit=crop&q=80',
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Mexico+City+International+Airport',
+    description: 'Stress-free airport pickups and drop-offs at Mexico City International Airport. Skip the taxi lines and ride in comfort with your driver waiting at arrivals.'
+  },
+  {
+    id: 'frida',
+    name: 'Frida Kahlo Museum',
+    coords: [19.3550, -99.1626],
+    driveMin: 29,
+    img: 'images/museo frida kahlo.jpg',
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Frida+Kahlo+Museum+Mexico+City',
+    description: 'Visit Casa Azul in Coyoacán, the iconic cobalt-blue house where Frida Kahlo was born, lived, and created her art. The museum displays personal artifacts, paintings, and the lush garden courtyard.'
   },
   {
     id: 'azteca',
     name: 'Estadio Azteca',
     coords: [19.3029, -99.1505],
-    img: 'https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=200&h=200&fit=crop&q=60',
-    imgCard: 'https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=400&h=300&fit=crop&q=80',
     driveMin: 35,
+    img: 'images/estadio-azteca.jpg',
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Estadio+Azteca',
     description: 'The legendary 87,000-seat stadium hosting World Cup 2026 matches. Home to two World Cup finals and countless historic moments in football history.'
+  },
+  {
+    id: 'xochimilco',
+    name: 'Xochimilco',
+    coords: [19.2574, -99.1038],
+    driveMin: 45,
+    img: 'images/xochimilco.jpeg',
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Xochimilco+Mexico+City',
+    description: 'Float through the ancient Aztec canals on colorful trajinera boats while mariachi bands play from passing vessels. A unique, vibrant experience you won\'t find anywhere else in the world.'
+  },
+  {
+    id: 'teotihuacan',
+    name: 'Teotihuacan Pyramids',
+    coords: [19.6925, -98.8438],
+    driveMin: 63,
+    img: 'https://images.unsplash.com/photo-1586933613001-b003c20beac0?w=400&h=300&fit=crop&q=80',
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Teotihuacan+Pyramids',
+    description: 'Climb the Pyramid of the Sun and Moon at one of the most impressive ancient cities in the Americas. Arrive early to beat the crowds and walk the Avenue of the Dead in morning light.'
   }
 ];
 
-// Roma/Condesa approximate polygon
-const ROMA_CONDESA_POLYGON = [
-  [19.4220, -99.1830],
-  [19.4220, -99.1560],
-  [19.4140, -99.1520],
-  [19.4020, -99.1560],
-  [19.4020, -99.1780],
-  [19.4100, -99.1830]
-];
+function expInit() {
+  const mapEl = document.getElementById('exploreMap');
+  if (!mapEl || !window.L) return;
 
-let explorerMap = null;
-let poiMarkers = {};
-let selectedStops = []; // ordered array of POI ids
-let routingControl = null;
-let fallbackLines = [];
+  const sidebar = document.getElementById('explorerSidebar');
+  let selectedId = null;
+  let routeLine = null;
+  let routeTip = null;
+  const markers = {};
 
-function initExplorerMap() {
-  const mapEl = document.getElementById('explorerMap');
-  if (!mapEl) return;
-
-  explorerMap = L.map(mapEl, {
-    center: [19.42, -99.15],
-    zoom: 12,
+  // CartoDB Positron tiles — clean, minimal, professional
+  const map = L.map(mapEl, {
+    center: [19.39, -99.13],
+    zoom: 11,
     zoomControl: true,
-    scrollWheelZoom: true
+    scrollWheelZoom: false
   });
 
-  // CartoDB Positron tiles (light, minimal)
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    attribution: '&copy; OpenStreetMap &copy; CARTO',
     maxZoom: 19,
     subdomains: 'abcd'
-  }).addTo(explorerMap);
+  }).addTo(map);
 
-  // Roma/Condesa polygon overlay
-  const romaPolygon = L.polygon(ROMA_CONDESA_POLYGON, {
-    color: '#000000',
-    weight: 1.5,
-    dashArray: '6, 6',
-    fillColor: '#000000',
-    fillOpacity: 0.05,
-    interactive: false
-  }).addTo(explorerMap);
-
-  // Permanent label for the polygon
-  romaPolygon.bindTooltip('Roma & Condesa', {
-    permanent: true,
-    direction: 'center',
-    className: 'roma-condesa-label'
-  });
-
-  // Home marker (Condesa) — pulsing pink circle
+  // Home marker (Roma & Condesa) — pulsing dot with permanent label
   const homeIcon = L.divIcon({
-    className: 'home-marker',
-    html: '<div class="home-marker-pulse"></div><div class="home-marker-dot"></div>',
-    iconSize: [36, 36],
-    iconAnchor: [18, 18]
+    className: '',
+    html: '<div class="exp-home-marker"></div>',
+    iconSize: [20, 20],
+    iconAnchor: [10, 10]
   });
-
-  L.marker(HOME_COORDS, { icon: homeIcon, interactive: false })
-    .addTo(explorerMap)
-    .bindTooltip('Starting Point', {
+  L.marker(EXP_HOME, { icon: homeIcon, interactive: false })
+    .addTo(map)
+    .bindTooltip('Roma & Condesa', {
       permanent: true,
       direction: 'top',
-      offset: [0, -20],
-      className: 'roma-condesa-label'
+      offset: [0, -10],
+      className: 'exp-home-label'
     });
 
-  // POI markers with circular thumbnails
-  POI_DATA.forEach(poi => {
+  // POI markers
+  EXP_POIS.forEach(function (p) {
     const icon = L.divIcon({
       className: '',
-      html: '<div class="poi-marker" data-poi="' + poi.id + '" style="background-image:url(\'' + poi.img + '\')">' +
-            '<span class="marker-order"></span></div>',
-      iconSize: [48, 48],
-      iconAnchor: [24, 24]
+      html: '<div class="exp-marker" data-id="' + p.id + '"></div>',
+      iconSize: [14, 14],
+      iconAnchor: [7, 7]
+    });
+    const m = L.marker(p.coords, { icon: icon, riseOnHover: true }).addTo(map);
+    m.bindTooltip(p.name + ' · ~' + p.driveMin + ' min', {
+      direction: 'top',
+      offset: [0, -10],
+      className: 'exp-tip'
+    });
+    m.on('click', function () { expSelect(p.id); });
+    markers[p.id] = m;
+  });
+
+  // Fit the initial view to include every place
+  const all = [EXP_HOME].concat(EXP_POIS.map(function (p) { return p.coords; }));
+  map.fitBounds(all, { padding: [40, 40] });
+
+  function expSelect(id) {
+    if (selectedId === id) { expClear(); return; }
+    selectedId = id;
+    const p = EXP_POIS.find(function (x) { return x.id === id; });
+
+    // Marker active state
+    Object.keys(markers).forEach(function (mid) {
+      const el = markers[mid].getElement();
+      if (!el) return;
+      const div = el.querySelector('.exp-marker');
+      if (div) div.classList.toggle('active', mid === id);
     });
 
-    const marker = L.marker(poi.coords, { icon: icon })
-      .addTo(explorerMap)
-      .bindTooltip(poi.name, { direction: 'top', offset: [0, -28] });
+    // Route polyline from home to the selected POI
+    if (routeLine) map.removeLayer(routeLine);
+    if (routeTip) map.removeLayer(routeTip);
+    routeLine = L.polyline([EXP_HOME, p.coords], {
+      color: '#e07a5f',
+      weight: 3.5,
+      opacity: 0.9,
+      dashArray: '8 6',
+      lineCap: 'round'
+    }).addTo(map);
 
-    marker.on('click', function () {
-      toggleStop(poi.id);
+    // Drive-time pill at the route midpoint
+    const mid = [(EXP_HOME[0] + p.coords[0]) / 2, (EXP_HOME[1] + p.coords[1]) / 2];
+    routeTip = L.tooltip({
+      permanent: true,
+      direction: 'center',
+      className: 'exp-drive-tip'
+    })
+      .setLatLng(mid)
+      .setContent('🚗 ~' + p.driveMin + ' min')
+      .addTo(map);
+
+    map.flyToBounds([EXP_HOME, p.coords], { padding: [70, 70], duration: 0.6 });
+    renderSidebar();
+  }
+
+  function expClear() {
+    selectedId = null;
+    Object.keys(markers).forEach(function (mid) {
+      const el = markers[mid].getElement();
+      if (!el) return;
+      const div = el.querySelector('.exp-marker');
+      if (div) div.classList.remove('active');
     });
-
-    poiMarkers[poi.id] = marker;
-  });
-
-  // Clear button
-  var clearBtn = document.getElementById('clearAllBtn');
-  if (clearBtn) {
-    clearBtn.addEventListener('click', clearAllStops);
-  }
-}
-
-function toggleStop(poiId) {
-  var idx = selectedStops.indexOf(poiId);
-  if (idx > -1) {
-    selectedStops.splice(idx, 1);
-  } else {
-    selectedStops.push(poiId);
-  }
-  updateMarkerStates();
-  updateRouteDisplay();
-  updatePanel();
-  renderPOICards();
-}
-
-function clearAllStops() {
-  selectedStops = [];
-  updateMarkerStates();
-  updateRouteDisplay();
-  updatePanel();
-  renderPOICards();
-}
-
-function updateMarkerStates() {
-  POI_DATA.forEach(function (poi) {
-    var marker = poiMarkers[poi.id];
-    if (!marker) return;
-    var el = marker.getElement();
-    if (!el) return;
-    var div = el.querySelector('.poi-marker');
-    if (!div) return;
-
-    var orderIdx = selectedStops.indexOf(poi.id);
-    if (orderIdx > -1) {
-      div.classList.add('selected');
-      var badge = div.querySelector('.marker-order');
-      if (badge) badge.textContent = orderIdx + 1;
-    } else {
-      div.classList.remove('selected');
-      var badge2 = div.querySelector('.marker-order');
-      if (badge2) badge2.textContent = '';
-    }
-  });
-}
-
-function updatePanel() {
-  var summaryBar = document.getElementById('routeSummaryBar');
-
-  if (selectedStops.length === 0) {
-    if (summaryBar) summaryBar.style.display = 'none';
-    return;
+    if (routeLine) { map.removeLayer(routeLine); routeLine = null; }
+    if (routeTip) { map.removeLayer(routeTip); routeTip = null; }
+    renderSidebar();
   }
 
-  if (summaryBar) summaryBar.style.display = '';
-
-  // Calculate total drive time
-  var totalTime = 0;
-  selectedStops.forEach(function (id) {
-    var poi = POI_DATA.find(function (p) { return p.id === id; });
-    if (poi) totalTime += poi.driveMin;
-  });
-
-  // Update summary values
-  var summaryStops = document.getElementById('summaryStops');
-  var summaryTime = document.getElementById('summaryTime');
-  if (summaryStops) summaryStops.textContent = selectedStops.length;
-  if (summaryTime) {
-    var hrs = Math.floor(totalTime / 60);
-    var mins = totalTime % 60;
-    summaryTime.textContent = hrs > 0 ? hrs + ' hr ' + mins + ' min' : totalTime + ' min';
-  }
-}
-
-function moveStop(poiId, direction) {
-  var idx = selectedStops.indexOf(poiId);
-  if (idx === -1) return;
-  var newIdx = idx + direction;
-  if (newIdx < 0 || newIdx >= selectedStops.length) return;
-  // Swap
-  var temp = selectedStops[newIdx];
-  selectedStops[newIdx] = selectedStops[idx];
-  selectedStops[idx] = temp;
-  updateMarkerStates();
-  updateRouteDisplay();
-  updatePanel();
-  renderPOICards();
-}
-
-function updateRouteDisplay() {
-  // Clear existing route
-  clearRouteLines();
-
-  if (selectedStops.length === 0) return;
-
-  // Build waypoints: Condesa -> stop1 -> stop2 -> ...
-  var waypoints = [L.latLng(HOME_COORDS[0], HOME_COORDS[1])];
-  selectedStops.forEach(function (id) {
-    var poi = POI_DATA.find(function (p) { return p.id === id; });
-    if (poi) waypoints.push(L.latLng(poi.coords[0], poi.coords[1]));
-  });
-
-  // Try Leaflet Routing Machine (OSRM) for visual route
-  try {
-    routingControl = L.Routing.control({
-      waypoints: waypoints,
-      routeWhileDragging: false,
-      addWaypoints: false,
-      draggableWaypoints: false,
-      show: false,
-      createMarker: function () { return null; },
-      lineOptions: {
-        styles: [
-          { color: '#000000', opacity: 0.15, weight: 7 },
-          { color: '#000000', opacity: 0.8, weight: 4 }
-        ],
-        addWaypoints: false
-      }
-    }).addTo(explorerMap);
-
-    routingControl.on('routingerror', function () {
-      drawFallbackLines(waypoints);
-    });
-
-    // Fit bounds to include all waypoints
-    var bounds = L.latLngBounds(waypoints);
-    explorerMap.fitBounds(bounds, { padding: [50, 50] });
-  } catch (e) {
-    drawFallbackLines(waypoints);
-  }
-}
-
-function drawFallbackLines(waypoints) {
-  clearRouteLines();
-  for (var i = 0; i < waypoints.length - 1; i++) {
-    var line = L.polyline([waypoints[i], waypoints[i + 1]], {
-      color: '#000000',
-      weight: 2,
-      dashArray: '6, 6',
-      opacity: 0.6
-    }).addTo(explorerMap);
-    fallbackLines.push(line);
-  }
-}
-
-function clearRouteLines() {
-  if (routingControl && explorerMap) {
-    try { explorerMap.removeControl(routingControl); } catch (e) {}
-    routingControl = null;
-  }
-  fallbackLines.forEach(function (line) {
-    if (explorerMap) explorerMap.removeLayer(line);
-  });
-  fallbackLines = [];
-}
-
-// ========================================
-// POI Cards
-// ========================================
-
-function renderPOICards() {
-  var list = document.getElementById('poiCardList');
-  if (!list) return;
-  var html = '';
-  POI_DATA.forEach(function (poi) {
-    var isSelected = selectedStops.indexOf(poi.id) > -1;
-    var orderIdx = selectedStops.indexOf(poi.id);
-    var selectedClass = isSelected ? ' poi-card--selected' : '';
-
-    html += '<div class="poi-card' + selectedClass + '" data-poi-id="' + poi.id + '">' +
-      '<div class="poi-card-img-wrap"><img src="' + poi.imgCard + '" alt="' + poi.name + '" loading="lazy"></div>' +
-      '<div class="poi-card-body">' +
-      '<h4>' + poi.name + '</h4>' +
-      '<span class="drive-badge">~' + poi.driveMin + ' min drive</span>' +
-      '<p class="poi-card-desc">' + poi.description + '</p>' +
-      '<div class="poi-card-actions">';
-
-    if (isSelected) {
-      html += '<span class="poi-card-order">' + (orderIdx + 1) + '</span>' +
-        '<button class="poi-toggle-btn">Remove</button>' +
-        '<div class="poi-reorder-btns">' +
-        '<button class="poi-reorder-btn" data-dir="-1" data-poi="' + poi.id + '" title="Move up">&#9650;</button>' +
-        '<button class="poi-reorder-btn" data-dir="1" data-poi="' + poi.id + '" title="Move down">&#9660;</button>' +
-        '</div>';
-    } else {
-      html += '<button class="poi-toggle-btn">Add to Route</button>';
-    }
-
-    html += '</div></div></div>';
-  });
-  list.innerHTML = html;
-
-  // Attach click handlers
-  list.querySelectorAll('.poi-card').forEach(function (card) {
-    var poiId = card.getAttribute('data-poi-id');
-    // Clicking the card body pans the map
-    card.addEventListener('click', function (e) {
-      if (e.target.classList.contains('poi-toggle-btn') ||
-          e.target.classList.contains('poi-reorder-btn')) return;
-      var poi = POI_DATA.find(function (p) { return p.id === poiId; });
-      if (poi && explorerMap) {
-        explorerMap.flyTo(poi.coords, 14, { duration: 0.6 });
-      }
-    });
-    // Toggle button
-    var btn = card.querySelector('.poi-toggle-btn');
-    if (btn) {
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        toggleStop(poiId);
+  function renderSidebar() {
+    if (!sidebar) return;
+    if (!selectedId) {
+      let rows = '';
+      EXP_POIS.forEach(function (p) {
+        rows += '<button class="exp-row" data-id="' + p.id + '">' +
+          '<img src="' + p.img + '" alt="">' +
+          '<div class="exp-row-body">' +
+          '<div class="exp-row-name">' + p.name + '</div>' +
+          '<div class="exp-row-time">~' + p.driveMin + ' min from Roma &amp; Condesa</div>' +
+          '</div></button>';
       });
-    }
-    // Reorder buttons
-    card.querySelectorAll('.poi-reorder-btn').forEach(function (rb) {
-      rb.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var dir = parseInt(rb.getAttribute('data-dir'));
-        var pid = rb.getAttribute('data-poi');
-        moveStop(pid, dir);
+      sidebar.innerHTML =
+        '<div class="exp-header">' +
+        '<div class="exp-eyebrow">Starting point</div>' +
+        '<div class="exp-home-name">Roma &amp; Condesa</div>' +
+        '</div>' +
+        '<div class="exp-list">' + rows + '</div>';
+      sidebar.querySelectorAll('.exp-row').forEach(function (b) {
+        b.addEventListener('click', function () { expSelect(b.getAttribute('data-id')); });
       });
-    });
-  });
+      return;
+    }
+
+    const p = EXP_POIS.find(function (x) { return x.id === selectedId; });
+    sidebar.innerHTML =
+      '<div class="exp-detail">' +
+      '<button class="exp-back" id="expBack">&larr; All destinations</button>' +
+      '<img class="exp-detail-img" src="' + p.img + '" alt="' + p.name + '">' +
+      '<span class="exp-detail-time">🚗 ~' + p.driveMin + ' min from Roma &amp; Condesa</span>' +
+      '<h3 class="exp-detail-name">' + p.name + '</h3>' +
+      '<p class="exp-detail-desc">' + p.description + '</p>' +
+      '<div class="exp-detail-actions">' +
+      '<a class="exp-maps" href="' + p.mapsUrl + '" target="_blank" rel="noopener">' +
+      'Open in Google Maps &#8599;</a>' +
+      '<a class="exp-book" href="#booking">Book this trip</a>' +
+      '</div></div>';
+    document.getElementById('expBack').addEventListener('click', expClear);
+  }
+
+  renderSidebar();
 }
 
-// Initialize map when DOM is ready
-document.addEventListener('DOMContentLoaded', function () {
-  initExplorerMap();
-  renderPOICards();
-});
+document.addEventListener('DOMContentLoaded', expInit);
 
 // ========================================
 // Inline Content Editing
