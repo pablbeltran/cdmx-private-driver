@@ -9,12 +9,12 @@
 // Env vars (configure in Vercel → Project → Settings → Environment Variables):
 //   RESEND_API_KEY            from resend.com
 //   BOOKING_NOTIFY_EMAIL      where requests get emailed (default: pablo@...)
-//   BOOKING_FROM_EMAIL        verified sender (default: onboarding@resend.dev)
+//   BOOKING_FROM_EMAIL        verified sender (default: bookings@mexicocityprivatecar.com)
 //   CALLMEBOT_API_KEY         from callmebot.com/blog/free-api-whatsapp-messages/
 //   WHATSAPP_NOTIFY_PHONE     E.164 without "+" (default: 525547828496)
 
 const NOTIFY_EMAIL = process.env.BOOKING_NOTIFY_EMAIL || 'pablo@mexicocityprivatecar.com';
-const FROM_EMAIL = process.env.BOOKING_FROM_EMAIL || 'CDMX Driver <onboarding@resend.dev>';
+const FROM_EMAIL = process.env.BOOKING_FROM_EMAIL || 'CDMX Private Cars <bookings@mexicocityprivatecar.com>';
 const WHATSAPP_NOTIFY_PHONE = process.env.WHATSAPP_NOTIFY_PHONE || '525547828496';
 
 function esc(s) {
@@ -135,11 +135,17 @@ module.exports = async function handler(req, res) {
     sendWhatsApp(payload)
   ]);
 
-  if (emailResult.status === 'fulfilled') console.log('email', emailResult.value);
-  else console.error('email failed:', emailResult.reason);
+  const notifications = {
+    email: emailResult.status === 'fulfilled'
+      ? emailResult.value
+      : { error: String((emailResult.reason && emailResult.reason.message) || emailResult.reason) },
+    whatsapp: whatsappResult.status === 'fulfilled'
+      ? whatsappResult.value
+      : { error: String((whatsappResult.reason && whatsappResult.reason.message) || whatsappResult.reason) }
+  };
 
-  if (whatsappResult.status === 'fulfilled') console.log('whatsapp', whatsappResult.value);
-  else console.error('whatsapp failed:', whatsappResult.reason);
+  // Surfaced in the response and the Vercel logs so delivery can be checked.
+  console.log('booking notifications:', JSON.stringify(notifications));
 
-  return res.status(200).json({ ok: true });
+  return res.status(200).json({ ok: true, notifications: notifications });
 };
