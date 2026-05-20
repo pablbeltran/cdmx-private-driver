@@ -170,31 +170,35 @@
   </section>
 
   <!-- Our Drivers -->
-  <section class="section section-alt" id="drivers">
+  <section class="section" id="drivers">
     <div class="container">
       <h2 class="section-title">Our Drivers</h2>
       <p class="section-subtitle">Experienced, English speaking, and proud to show you their city</p>
-      <div class="drivers-list">
+      <div class="drivers-grid">
         <article class="driver-card">
-          <div class="driver-photo">
-            <img src="https://images.unsplash.com/photo-1648757766966-43d24bf7a264?w=480&h=640&fit=crop&q=70" alt="Carlos M., driver portrait">
+          <div class="driver-photo" tabindex="0">
+            <img src="https://images.unsplash.com/photo-1652471943570-f3590a4e52ed?w=1124&h=880&fit=crop&q=75" alt="Carlos M., driver portrait">
+            <div class="driver-bio">
+              <p>Born and raised in Mexico City. Carlos knows every shortcut and hidden gem. Former hospitality professional who loves sharing the city's history with visitors.</p>
+              <div class="driver-bio-meta">8 years experience &middot; English &amp; Spanish</div>
+            </div>
           </div>
-          <div class="driver-info">
+          <div class="driver-caption">
             <h3 class="driver-name">Carlos M.</h3>
             <div class="driver-location">Mexico City, MX</div>
-            <div class="driver-meta">8 years experience &middot; English &amp; Spanish</div>
-            <p>Born and raised in Mexico City. Carlos knows every shortcut and hidden gem. Former hospitality professional who loves sharing the city's history with visitors.</p>
           </div>
         </article>
         <article class="driver-card">
-          <div class="driver-photo">
-            <img src="https://images.unsplash.com/photo-1640531005390-38bd92755d6a?w=480&h=640&fit=crop&q=70" alt="Roberto S., driver portrait">
+          <div class="driver-photo" tabindex="0">
+            <img src="https://images.unsplash.com/photo-1644268756918-16348d1bc619?w=1124&h=880&fit=crop&q=75" alt="Roberto S., driver portrait">
+            <div class="driver-bio">
+              <p>Our most experienced driver. Roberto specializes in airport transfers and long distance trips to Teotihuacan, Puebla, and beyond.</p>
+              <div class="driver-bio-meta">10 years experience &middot; English, Spanish &amp; French</div>
+            </div>
           </div>
-          <div class="driver-info">
+          <div class="driver-caption">
             <h3 class="driver-name">Roberto S.</h3>
             <div class="driver-location">Mexico City, MX</div>
-            <div class="driver-meta">10 years experience &middot; English, Spanish &amp; French</div>
-            <p>Our most experienced driver. Roberto specializes in airport transfers and long distance trips to Teotihuacan, Puebla, and beyond.</p>
           </div>
         </article>
       </div>
@@ -248,11 +252,20 @@
   </section>
 
   <!-- Booking Section -->
-  <section class="section booking-section" id="booking">
+  <section class="booking-section" id="booking">
+    <div class="booking-bg">
+      <div class="booking-slide active" style="background-image: url('https://images.unsplash.com/photo-1585464231875-d9ef1f5ad396?w=1920&h=1080&fit=crop&q=80')"></div>
+      <div class="booking-slide" style="background-image: url('https://images.unsplash.com/photo-1518659526054-190340b32735?w=1920&h=1080&fit=crop&q=80')"></div>
+      <div class="booking-slide" style="background-image: url('https://images.unsplash.com/photo-1614895196252-f127fb7c421d?w=1920&h=1080&fit=crop&q=80')"></div>
+      <div class="booking-slide" style="background-image: url('https://images.unsplash.com/photo-1573485905785-f8f87e7bf82c?w=1920&h=1080&fit=crop&q=80')"></div>
+      <div class="booking-slide" style="background-image: url('https://images.unsplash.com/photo-1666037359349-0c5a7c06d34e?w=1920&h=1080&fit=crop&q=80')"></div>
+      <div class="booking-slide" style="background-image: url('https://images.unsplash.com/photo-1699654415302-aac79f3c8ac4?w=1920&h=1080&fit=crop&q=80')"></div>
+    </div>
+    <div class="booking-overlay"></div>
     <div class="container">
-      <h2 class="section-title">Book Your Trip</h2>
-      <p class="section-subtitle">Select your dates and we'll take care of the rest</p>
-      <div class="booking-wrapper">
+      <div class="booking-panel">
+        <h2 class="booking-panel-title">Book Your Trip</h2>
+        <p class="booking-panel-sub">Select your dates and we'll take care of the rest.</p>
         <form class="booking-form" id="bookingForm">
           <div class="form-group">
             <label for="dateRange">Select Your Dates</label>
@@ -283,20 +296,9 @@
           </div>
           <button type="submit" class="btn btn-primary btn-full">Request Reservation</button>
         </form>
-        <div class="booking-info">
-          <h3>What's Included</h3>
-          <ul>
-            <li>Dedicated private driver, hourly or full day</li>
-            <li>Comfortable, air conditioned vehicle</li>
-            <li>Airport pickup &amp; drop off</li>
-            <li>Wait time at all your stops, no rush</li>
-            <li>English speaking driver</li>
-            <li>24/7 WhatsApp support</li>
-            <li>Flexible itinerary, change plans anytime</li>
-          </ul>
-          <div class="booking-contact">
-            <p>Prefer to talk? Reach us directly:</p>
-            <div class="contact-options">
+        <div class="booking-contact">
+          <p>Prefer to talk? Reach us directly:</p>
+          <div class="contact-options">
               <a class="contact-btn" href="https://wa.me/525547828496?text=Hi!%20I'm%20interested%20in%20booking%20a%20private%20driver%20in%20Mexico%20City.%20Could%20you%20send%20me%20more%20info%20on%20availability%2C%20rates%2C%20and%20how%20the%20service%20works%3F%20Thanks!" target="_blank" rel="noopener" aria-label="Contact us on WhatsApp">
                 <svg class="contact-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <path d="M16.004 0h-.008C7.174 0 .002 7.174.002 16c0 3.5 1.128 6.744 3.046 9.378L1.05 31.27l6.094-1.948A15.92 15.92 0 0 0 16.004 32C24.83 32 32 24.826 32 16S24.83 0 16.004 0z" fill="#25D366"/>
@@ -317,7 +319,6 @@
                 </svg>
                 <span>Email</span>
               </a>
-            </div>
           </div>
         </div>
       </div>

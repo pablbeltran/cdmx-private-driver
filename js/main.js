@@ -1,14 +1,18 @@
 // ========================================
-// Hero Background Slideshow
+// Background Slideshows (hero + booking)
 // ========================================
-const heroSlides = document.querySelectorAll('.hero-slide');
-let currentSlide = 0;
+function runSlideshow(slides, interval) {
+  if (slides.length < 2) return;
+  let current = 0;
+  setInterval(function () {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }, interval);
+}
 
-setInterval(() => {
-  heroSlides[currentSlide].classList.remove('active');
-  currentSlide = (currentSlide + 1) % heroSlides.length;
-  heroSlides[currentSlide].classList.add('active');
-}, 4000);
+runSlideshow(document.querySelectorAll('.hero-slide'), 4000);
+runSlideshow(document.querySelectorAll('.booking-slide'), 4000);
 
 // ========================================
 // Mobile Navigation Toggle
