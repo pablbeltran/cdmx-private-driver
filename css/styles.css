@@ -362,7 +362,7 @@ img {
 .section-title {
   text-align: center;
   font-size: clamp(1.75rem, 4vw, 2.75rem);
-  font-weight: 700;
+  font-weight: 400;
   color: var(--color-text);
   margin-bottom: 12px;
   letter-spacing: -0.03em;
@@ -498,7 +498,7 @@ img {
 
 .map-explorer-section .section-title {
   color: var(--color-white);
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .map-explorer-section .section-subtitle {
@@ -823,6 +823,7 @@ img {
   overflow: hidden;
   padding-top: 0;
   isolation: isolate;
+  font-family: 'Oswald', 'Montserrat', sans-serif;
 }
 
 .world-cup-section::before,
@@ -859,6 +860,7 @@ img {
 
 .world-cup-section .section-title {
   color: var(--color-white);
+  font-weight: 700;
 }
 
 .wc-acc-orange { color: #ff6b2c; }
@@ -945,6 +947,7 @@ img {
   color: #ffffff;
   border: none;
   font-weight: 700;
+  font-family: inherit;
   position: relative;
   z-index: 1;
   box-shadow: 0 12px 32px -8px rgba(255, 107, 44, 0.55);
@@ -1197,7 +1200,7 @@ img {
 
 .booking-panel-title {
   font-size: 1.9rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--color-text);
   letter-spacing: -0.025em;
   margin-bottom: 6px;
@@ -1633,6 +1636,10 @@ img {
 /* ========================================
    Our Fleet
    ======================================== */
+#fleet {
+  background: #f4f1ec;
+}
+
 .fleet-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1644,7 +1651,7 @@ img {
   flex-direction: column;
   background: var(--color-white);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius);
+  border-radius: 0;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
   transition: all var(--transition);
@@ -1726,7 +1733,7 @@ img {
   display: block;
   margin-top: auto;
   padding: 12px 20px;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   background: var(--color-primary);
   color: var(--color-white);
   font-family: var(--font-family);
