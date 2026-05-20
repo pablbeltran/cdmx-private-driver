@@ -45,8 +45,9 @@ window.addEventListener('scroll', () => {
 // ========================================
 // Flatpickr Date Range Picker + Estimate
 // ========================================
-// TODO: confirm with real pricing. Used to show an estimate on the form.
-const RATE_PER_DAY_USD = 280;
+// Starting daily rate (Comfort Sedan). The form shows a "from" estimate;
+// the final price depends on which vehicle is picked from the fleet.
+const RATE_PER_DAY_USD = 240;
 
 const daysCountEl = document.getElementById('daysCount');
 let currentDays = 0;
@@ -70,7 +71,7 @@ const datePicker = flatpickr('#dateRange', {
       currentEstimate = currentDays * RATE_PER_DAY_USD;
       daysCountEl.textContent =
         currentDays + ' day' + (currentDays > 1 ? 's' : '') +
-        ' · Est. ' + formatUsd(currentEstimate);
+        ' · Est. from ' + formatUsd(currentEstimate);
     } else {
       currentDays = 0;
       currentEstimate = 0;
@@ -139,7 +140,7 @@ bookingForm.addEventListener('submit', async (e) => {
 // ========================================
 const animateOnScroll = () => {
   const elements = document.querySelectorAll(
-    '.step, .wc-feature, .safety-item, .driver-card'
+    '.step, .wc-feature, .safety-item, .driver-card, .fleet-card'
   );
 
   const observer = new IntersectionObserver(
@@ -188,7 +189,7 @@ const EXP_POIS = [
     driveMin: 15,
     img: 'images/Biblioteca_Vasconcelos,_Ciudad_de_México,_México,_2015-07-20,_DD_13-15_HDR.jpg',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Biblioteca+Vasconcelos',
-    description: 'One of the most stunning modern libraries in the world. Rows of bookshelves appear to float in mid-air inside this massive steel-and-glass structure — a must-see for architecture and design lovers.'
+    description: 'One of the most stunning modern libraries in the world. Rows of bookshelves appear to float in mid air inside this massive steel and glass structure. A must see for architecture and design lovers.'
   },
   {
     id: 'zocalo',
@@ -197,7 +198,7 @@ const EXP_POIS = [
     driveMin: 17,
     img: 'https://images.unsplash.com/photo-1573485905785-f8f87e7bf82c?w=400&h=300&fit=crop&q=80',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Zocalo+Mexico+City',
-    description: 'The beating heart of Mexico City. Explore the massive cathedral, Palacio Nacional with Diego Rivera murals, and Templo Mayor — the ruins of the Aztec capital hidden in plain sight.'
+    description: 'The beating heart of Mexico City. Explore the massive cathedral, Palacio Nacional with Diego Rivera murals, and Templo Mayor, the ruins of the Aztec capital hidden in plain sight.'
   },
   {
     id: 'airport',
@@ -206,7 +207,7 @@ const EXP_POIS = [
     driveMin: 23,
     img: 'https://images.unsplash.com/photo-1553619948-505cc1cdc320?w=400&h=300&fit=crop&q=80',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Mexico+City+International+Airport',
-    description: 'Stress-free airport pickups and drop-offs at Mexico City International Airport. Skip the taxi lines and ride in comfort with your driver waiting at arrivals.'
+    description: 'Stress free airport pickups and drop offs at Mexico City International Airport. Skip the taxi lines and ride in comfort with your driver waiting at arrivals.'
   },
   {
     id: 'frida',
@@ -215,7 +216,7 @@ const EXP_POIS = [
     driveMin: 29,
     img: 'images/museo frida kahlo.jpg',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Frida+Kahlo+Museum+Mexico+City',
-    description: 'Visit Casa Azul in Coyoacán, the iconic cobalt-blue house where Frida Kahlo was born, lived, and created her art. The museum displays personal artifacts, paintings, and the lush garden courtyard.'
+    description: 'Visit Casa Azul in Coyoacán, the iconic cobalt blue house where Frida Kahlo was born, lived, and created her art. The museum displays personal artifacts, paintings, and the lush garden courtyard.'
   },
   {
     id: 'azteca',
@@ -224,7 +225,7 @@ const EXP_POIS = [
     driveMin: 35,
     img: 'images/estadio-azteca.jpg',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Estadio+Azteca',
-    description: 'The legendary 87,000-seat stadium hosting World Cup 2026 matches. Home to two World Cup finals and countless historic moments in football history.'
+    description: 'The legendary 87,000 seat stadium hosting World Cup 2026 matches. Home to two World Cup finals and countless historic moments in football history.'
   },
   {
     id: 'xochimilco',
@@ -256,7 +257,7 @@ function expInit() {
   let routeTip = null;
   const markers = {};
 
-  // CartoDB Positron tiles — clean, minimal, professional
+  // CartoDB Positron tiles: clean, minimal, professional
   const map = L.map(mapEl, {
     center: [19.39, -99.13],
     zoom: 11,
@@ -270,7 +271,7 @@ function expInit() {
     subdomains: 'abcd'
   }).addTo(map);
 
-  // Home marker (Roma & Condesa) — pulsing dot with permanent label
+  // Home marker (Roma & Condesa): pulsing dot with permanent label
   const homeIcon = L.divIcon({
     className: '',
     html: '<div class="exp-home-marker"></div>',
@@ -290,14 +291,18 @@ function expInit() {
   EXP_POIS.forEach(function (p) {
     const icon = L.divIcon({
       className: '',
-      html: '<div class="exp-marker" data-id="' + p.id + '"></div>',
-      iconSize: [14, 14],
-      iconAnchor: [7, 7]
+      html: '<div class="exp-pin" data-id="' + p.id + '">' +
+        '<svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M12 0C5.4 0 0 5.4 0 12c0 8.4 12 20 12 20s12-11.6 12-20C24 5.4 18.6 0 12 0z" fill="currentColor"/>' +
+        '<circle cx="12" cy="12" r="4.6" fill="#ffffff"/>' +
+        '</svg></div>',
+      iconSize: [28, 36],
+      iconAnchor: [14, 36]
     });
     const m = L.marker(p.coords, { icon: icon, riseOnHover: true }).addTo(map);
     m.bindTooltip(p.name + ' · ~' + p.driveMin + ' min', {
       direction: 'top',
-      offset: [0, -10],
+      offset: [0, -40],
       className: 'exp-tip'
     });
     m.on('click', function () { expSelect(p.id); });
@@ -317,7 +322,7 @@ function expInit() {
     Object.keys(markers).forEach(function (mid) {
       const el = markers[mid].getElement();
       if (!el) return;
-      const div = el.querySelector('.exp-marker');
+      const div = el.querySelector('.exp-pin');
       if (div) div.classList.toggle('active', mid === id);
     });
 
@@ -352,7 +357,7 @@ function expInit() {
     Object.keys(markers).forEach(function (mid) {
       const el = markers[mid].getElement();
       if (!el) return;
-      const div = el.querySelector('.exp-marker');
+      const div = el.querySelector('.exp-pin');
       if (div) div.classList.remove('active');
     });
     if (routeLine) { map.removeLayer(routeLine); routeLine = null; }
@@ -406,120 +411,37 @@ function expInit() {
 document.addEventListener('DOMContentLoaded', expInit);
 
 // ========================================
-// Inline Content Editing
+// World Cup First Visit Popup
 // ========================================
-const STORAGE_KEY = 'cdmx-driver-edits';
+(function () {
+  const STORAGE_KEY = 'cdmx-wc-popup-shown';
+  const popup = document.getElementById('wcPopup');
+  if (!popup) return;
+  if (localStorage.getItem(STORAGE_KEY)) return;
 
-// Elements that should be editable (text content only, not nav/form/buttons)
-const editableSelectors = [
-  '.hero h1',
-  '.trust-label',
-  '.trust-statement',
-  '.section-title',
-  '.section-subtitle',
-  '.step h3',
-  '.step p',
-  '.world-cup-badge',
-  '.wc-feature h3',
-  '.wc-feature p',
-  '.safety-item h3',
-  '.safety-item p',
-  '.driver-card h3',
-  '.driver-meta',
-  '.driver-card p',
-  '.booking-info h3',
-  '.booking-info li',
-  '.booking-contact p',
-  '.footer-brand h3',
-  '.footer-brand p',
-  '.footer-contact li',
-];
-
-let editMode = false;
-
-// Assign a stable ID to each editable element based on selector + index
-function getEditableElements() {
-  const elements = [];
-  editableSelectors.forEach(selector => {
-    document.querySelectorAll(selector).forEach((el, i) => {
-      const key = selector + '[' + i + ']';
-      elements.push({ el, key });
+  function open() {
+    popup.removeAttribute('hidden');
+    // Force a frame so the transition runs from the hidden state.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        popup.classList.add('is-open');
+      });
     });
-  });
-  return elements;
-}
-
-// Load saved edits from localStorage
-function loadEdits() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (!saved) return;
-  const edits = JSON.parse(saved);
-  getEditableElements().forEach(({ el, key }) => {
-    if (edits[key] !== undefined) {
-      el.innerHTML = edits[key];
-    }
-  });
-}
-
-// Save all current text to localStorage
-function saveEdits() {
-  const edits = {};
-  getEditableElements().forEach(({ el, key }) => {
-    edits[key] = el.innerHTML;
-  });
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(edits));
-}
-
-// Toggle edit mode
-function enableEditMode() {
-  editMode = true;
-  getEditableElements().forEach(({ el }) => {
-    el.contentEditable = 'true';
-    el.classList.add('editable');
-  });
-  editToggleBtn.textContent = 'Save Changes';
-  editToggleBtn.style.background = '#22c55e';
-  resetBtn.style.display = 'inline-block';
-}
-
-function disableEditMode() {
-  editMode = false;
-  saveEdits();
-  getEditableElements().forEach(({ el }) => {
-    el.contentEditable = 'false';
-    el.classList.remove('editable');
-  });
-  editToggleBtn.textContent = 'Edit Content';
-  editToggleBtn.style.background = '';
-  resetBtn.style.display = 'none';
-}
-
-// Build the floating edit toolbar
-const editToolbar = document.createElement('div');
-editToolbar.id = 'editToolbar';
-editToolbar.innerHTML = `
-  <button id="editToggleBtn">Edit Content</button>
-  <button id="resetEditsBtn" style="display:none">Reset to Original</button>
-`;
-document.body.appendChild(editToolbar);
-
-const editToggleBtn = document.getElementById('editToggleBtn');
-const resetBtn = document.getElementById('resetEditsBtn');
-
-editToggleBtn.addEventListener('click', () => {
-  if (editMode) {
-    disableEditMode();
-  } else {
-    enableEditMode();
+    localStorage.setItem(STORAGE_KEY, '1');
   }
-});
 
-resetBtn.addEventListener('click', () => {
-  if (confirm('Reset all text to the original? This cannot be undone.')) {
-    localStorage.removeItem(STORAGE_KEY);
-    location.reload();
+  function close() {
+    popup.classList.remove('is-open');
+    setTimeout(function () {
+      popup.setAttribute('hidden', '');
+    }, 320);
   }
-});
 
-// Load any previously saved edits on page load
-loadEdits();
+  // Give the slideshow a beat before slipping the popup in.
+  setTimeout(open, 900);
+
+  const closeBtn = document.getElementById('wcPopupClose');
+  const ctaBtn = document.getElementById('wcPopupCta');
+  if (closeBtn) closeBtn.addEventListener('click', close);
+  if (ctaBtn) ctaBtn.addEventListener('click', close);
+})();
