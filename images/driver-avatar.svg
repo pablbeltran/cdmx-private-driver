@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124 880" preserveAspectRatio="xMidYMid slice">
+  <rect width="1124" height="880" fill="#ffffff"/>
+  <g fill="#9ca3af" transform="translate(562 440)">
+    <circle cx="0" cy="-110" r="150"/>
+    <path d="M-300 320 C-300 140 -160 60 0 60 C160 60 300 140 300 320 L300 440 L-300 440 Z"/>
+  </g>
+</svg>
