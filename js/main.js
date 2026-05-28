@@ -61,11 +61,17 @@ function formatUsd(n) {
   return '$' + n.toLocaleString('en-US') + ' USD';
 }
 
+// Dates we can't take bookings on. Each entry is an inclusive range.
+const UNAVAILABLE_RANGES = [
+  { from: '2026-06-10', to: '2026-06-16' }
+];
+
 const datePicker = flatpickr('#dateRange', {
   mode: 'range',
   minDate: 'today',
   dateFormat: 'M d, Y',
   disableMobile: true,
+  disable: UNAVAILABLE_RANGES,
   onChange: function (selectedDates) {
     if (selectedDates.length === 2) {
       const start = selectedDates[0];
